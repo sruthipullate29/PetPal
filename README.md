@@ -29,12 +29,13 @@ A full-stack pet sitting application that connects pet owners with trusted pet s
 | Frontend | React 18, Vite, React Router, Tailwind CSS |
 | Backend  | Node.js, Express                    |
 | Auth     | JWT (JSON Web Tokens)               |
-| Storage  | JSON file (`backend/data/db.json`)  |
+| Storage  | MongoDB (Mongoose)                  |
 
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/) v18 or later
 - npm (comes with Node.js)
+- MongoDB (local instance or [MongoDB Atlas](https://www.mongodb.com/atlas) free tier)
 
 ## Getting Started
 
@@ -50,7 +51,23 @@ cd Frontend
 npm install
 ```
 
-### 2. Start the backend
+### 2. Configure environment variables
+
+Create a `.env` file in the `backend/` directory (or copy from the example):
+
+```bash
+cd backend
+cp .env.example .env
+```
+
+Then set your MongoDB connection string:
+
+```env
+MONGODB_URI=mongodb://127.0.0.1:27017/petpal
+JWT_SECRET=your-long-random-secret
+```
+
+### 3. Start the backend
 
 ```bash
 cd backend
@@ -59,7 +76,7 @@ npm start
 
 The API runs at **http://localhost:3001**. A health check is available at `GET /api/health`.
 
-### 3. Start the frontend
+### 4. Start the frontend
 
 ```bash
 cd Frontend
@@ -67,6 +84,44 @@ npm run dev
 ```
 
 The app opens at **http://localhost:5173**. API requests are proxied to the backend automatically.
+
+## Deploying to Render
+
+This project is configured for **single-service deployment** on Render, where the Express backend serves both the API and the built React frontend.
+
+### Option A: Render Blueprint (recommended)
+
+1. Push this repository to GitHub.
+2. In the Render Dashboard, click **New → Blueprint**.
+3. Select the repository. Render will detect the `render.yaml` configuration.
+4. You'll be prompted to set two environment variables:
+   - `MONGODB_URI` — your MongoDB connection string (e.g. from MongoDB Atlas)
+   - `JWT_SECRET` — a long random secret string
+5. Click **Apply**. Render will build and deploy the app automatically.
+
+### Option B: Manual Web Service
+
+1. Push this repository to GitHub.
+2. In the Render Dashboard, click **New → Web Service**.
+3. Connect your repository.
+4. Configure:
+   - **Name**: `petpal`
+   - **Runtime**: `Node`
+   - **Build Command**: `cd Frontend && npm install && npm run build && cd ../backend && npm install`
+   - **Start Command**: `cd backend && node server.js`
+   - **Health Check Path**: `/api/health`
+5. Add environment variables:
+   - `MONGODB_URI` (your MongoDB connection string)
+   - `JWT_SECRET` (a long random secret)
+6. Click **Create Web Service**.
+
+### Getting a MongoDB URI (MongoDB Atlas)
+
+1. Create a free cluster at [MongoDB Atlas](https://www.mongodb.com/atlas).
+2. Create a database user.
+3. Add your IP address to the network access list (or allow all `0.0.0.0/0` for testing).
+4. Click **Connect → Drivers** and copy the connection string.
+5. Paste it as the `MONGODB_URI` value.
 
 ## Usage Flow
 
@@ -98,18 +153,23 @@ The app opens at **http://localhost:5173**. API requests are proxied to the back
 ```
 PetPal/
 ├── README.md
+├── render.yaml              # Render deployment config
 ├── backend/
-│   ├── server.js           # Express entry point
-│   ├── db.js               # JSON file storage helpers
+│   ├── server.js            # Express entry point
+│   ├── db.js                # MongoDB connection
+│   ├── .env.example         # Environment variable template
+│   ├── models/              # Mongoose models
+│   │   ├── User.js
+│   │   ├── Pet.js
+│   │   ├── SitterProfile.js
+│   │   └── Booking.js
 │   ├── middleware/
-│   │   └── auth.js         # JWT middleware
-│   ├── routes/
-│   │   ├── auth.js
-│   │   ├── pets.js
-│   │   ├── sitters.js
-│   │   └── bookings.js
-│   └── data/
-│       └── db.json         # Auto-created on first run
+│   │   └── auth.js          # JWT middleware
+│   └── routes/
+│       ├── auth.js
+│       ├── pets.js
+│       ├── sitters.js
+│       └── bookings.js
 └── Frontend/
     ├── index.html
     ├── vite.config.js
@@ -125,7 +185,6 @@ PetPal/
 
 ## Limitations & Next Steps
 
-- **File-based storage** — suitable for development/demo; use PostgreSQL or MongoDB for production
 - **No email verification or password reset**
 - **No payment processing**
 - **No real-time notifications** — users must refresh to see booking updates

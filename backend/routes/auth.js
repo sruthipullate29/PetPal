@@ -1,8 +1,8 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { v4: uuidv4 } = require("uuid");
-const { readDb, updateDb } = require("../db");
+const User = require("../models/User");
+const SitterProfile = require("../models/SitterProfile");
 const { authMiddleware, JWT_SECRET } = require("../middleware/auth");
 
 const router = express.Router();
@@ -20,34 +20,29 @@ router.post("/signup", async (req, res) => {
     return res.status(400).json({ error: "Password must be at least 6 characters" });
   }
 
-  const db = readDb();
-  if (db.users.find((u) => u.email.toLowerCase() === email.toLowerCase())) {
+  const existing = await User.findOne({ email: email.toLowerCase() });
+  if (existing) {
     return res.status(409).json({ error: "Email already registered" });
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const user = {
-    id: uuidv4(),
+  const user = await User.create({
     email: email.toLowerCase(),
     password: hashedPassword,
     name,
     role,
-    createdAt: new Date().toISOString(),
-  };
-
-  await updateDb((db) => {
-    db.users.push(user);
-    if (role === "sitter") {
-      db.sitterProfiles.push({
-        userId: user.id,
-        bio: "",
-        hourlyRate: 25,
-        services: ["Dog Walking", "Pet Sitting"],
-        location: "",
-        availability: [],
-      });
-    }
   });
+
+  if (role === "sitter") {
+    await SitterProfile.create({
+      userId: user.id,
+      bio: "",
+      hourlyRate: 25,
+      services: ["Dog Walking", "Pet Sitting"],
+      location: "",
+      availability: [],
+    });
+  }
 
   const token = jwt.sign(
     { id: user.id, email: user.email, role: user.role, name: user.name },
@@ -68,8 +63,7 @@ router.post("/login", async (req, res) => {
     return res.status(400).json({ error: "Email and password are required" });
   }
 
-  const db = readDb();
-  const user = db.users.find((u) => u.email.toLowerCase() === email.toLowerCase());
+  const user = await User.findOne({ email: email.toLowerCase() });
   if (!user) {
     return res.status(401).json({ error: "Invalid email or password" });
   }
@@ -91,9 +85,8 @@ router.post("/login", async (req, res) => {
   });
 });
 
-router.get("/me", authMiddleware, (req, res) => {
-  const db = readDb();
-  const user = db.users.find((u) => u.id === req.user.id);
+router.get("/me", authMiddleware, async (req, res) => {
+  const user = await User.findOne({ id: req.user.id });
   if (!user) {
     return res.status(404).json({ error: "User not found" });
   }
@@ -106,3 +99,4 @@ router.get("/me", authMiddleware, (req, res) => {
 });
 
 module.exports = router;
+

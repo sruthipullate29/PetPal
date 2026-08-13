@@ -59,7 +59,7 @@ function App() {
           element={
             <ProtectedRoute role="owner">
               <BookSitter />
-            </ProtectedRoute>
+            </ProtectedRoute> 
           }
         />
         <Route

@@ -1,15 +1,13 @@
 const express = require("express");
-const { v4: uuidv4 } = require("uuid");
-const { readDb, updateDb } = require("../db");
+const Pet = require("../models/Pet");
 const { authMiddleware, requireRole } = require("../middleware/auth");
 
 const router = express.Router();
 
 router.use(authMiddleware, requireRole("owner"));
 
-router.get("/", (req, res) => {
-  const db = readDb();
-  const pets = db.pets.filter((p) => p.ownerId === req.user.id);
+router.get("/", async (req, res) => {
+  const pets = await Pet.find({ ownerId: req.user.id });
   res.json(pets);
 });
 
@@ -19,61 +17,44 @@ router.post("/", async (req, res) => {
     return res.status(400).json({ error: "Name and type are required" });
   }
 
-  const pet = {
-    id: uuidv4(),
+  const pet = await Pet.create({
     ownerId: req.user.id,
     name,
     type,
     breed: breed || "",
     age: age || "",
     notes: notes || "",
-    createdAt: new Date().toISOString(),
-  };
-
-  await updateDb((db) => {
-    db.pets.push(pet);
   });
 
   res.status(201).json(pet);
 });
 
 router.put("/:id", async (req, res) => {
-  const db = readDb();
-  const index = db.pets.findIndex((p) => p.id === req.params.id && p.ownerId === req.user.id);
-  if (index === -1) {
+  const pet = await Pet.findOne({ id: req.params.id, ownerId: req.user.id });
+  if (!pet) {
     return res.status(404).json({ error: "Pet not found" });
   }
 
   const { name, type, breed, age, notes } = req.body;
-  const updated = {
-    ...db.pets[index],
-    name: name ?? db.pets[index].name,
-    type: type ?? db.pets[index].type,
-    breed: breed ?? db.pets[index].breed,
-    age: age ?? db.pets[index].age,
-    notes: notes ?? db.pets[index].notes,
-  };
+  pet.name = name ?? pet.name;
+  pet.type = type ?? pet.type;
+  pet.breed = breed ?? pet.breed;
+  pet.age = age ?? pet.age;
+  pet.notes = notes ?? pet.notes;
+  await pet.save();
 
-  await updateDb((db) => {
-    const idx = db.pets.findIndex((p) => p.id === req.params.id);
-    if (idx !== -1) db.pets[idx] = updated;
-  });
-
-  res.json(updated);
+  res.json(pet);
 });
 
 router.delete("/:id", async (req, res) => {
-  const db = readDb();
-  const index = db.pets.findIndex((p) => p.id === req.params.id && p.ownerId === req.user.id);
-  if (index === -1) {
+  const pet = await Pet.findOne({ id: req.params.id, ownerId: req.user.id });
+  if (!pet) {
     return res.status(404).json({ error: "Pet not found" });
   }
 
-  await updateDb((db) => {
-    db.pets = db.pets.filter((p) => p.id !== req.params.id);
-  });
-
+  await pet.deleteOne();
   res.json({ message: "Pet deleted" });
 });
 
 module.exports = router;
+
