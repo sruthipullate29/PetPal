@@ -12,6 +12,7 @@ import BrowseSitters from "./pages/BrowseSitters";
 import BookSitter from "./pages/BookSitter";
 import MyBookings from "./pages/MyBookings";
 import SitterProfile from "./pages/SitterProfile";
+import Founder from "./pages/Founder";
 
 function DashboardRouter() {
   const { user } = useAuth();
@@ -78,8 +79,9 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+        <Route path="/founder" element={<Founder />} />
         <Route path="*" element={<Navigate to="/" replace />} />
+        
       </Routes>
     </div>
   );
