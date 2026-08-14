@@ -6,56 +6,56 @@ export default function Landing() {
     <div className="min-h-screen bg-white">
 
       {/* ================= NAVIGATION BAR ================= */}
-<nav className="relative z-[100] bg-white shadow-md">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div className="flex items-center justify-between h-16">
+      <nav className="absolute top-0 left-0 right-0 z-[100] bg-black/20 backdrop-blur-md border-b border-white/10 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
 
-      {/* Logo */}
-      <Link
-        to="/"
-        className="text-2xl font-bold text-primary-600"
-      >
-        PetNiva 🐾
-      </Link>
+            {/* Logo */}
+            <Link
+              to="/"
+              className="text-2xl font-bold text-white hover:text-primary-200 flex items-center gap-2 transition-colors"
+            >
+              PetNiva 🐾
+            </Link>
 
-      {/* Navigation Links */}
-      <div className="flex items-center gap-6">
+            {/* Navigation Links */}
+            <div className="flex items-center gap-6">
 
-        <Link
-          to="/"
-          className="text-gray-700 font-medium hover:text-primary-600"
-        >
-          Home
-        </Link>
+              <Link
+                to="/"
+                className="text-white/80 font-medium hover:text-white transition-all duration-300 hover:scale-105 active:scale-95"
+              >
+                Home
+              </Link>
 
-        <Link
-          to="/founder"
-          className="text-gray-700 font-medium hover:text-primary-600"
-        >
-          About Founder
-        </Link>
+              <Link
+                to="/founder"
+                className="text-white/80 font-medium hover:text-white transition-all duration-300 hover:scale-105 active:scale-95"
+              >
+                About Founder
+              </Link>
 
-        <Link
-          to="/login"
-          className="text-gray-700 font-medium hover:text-primary-600"
-        >
-          Login
-        </Link>
+              <Link
+                to="/login"
+                className="text-white/80 font-medium hover:text-white transition-all duration-300 hover:scale-105 active:scale-95"
+              >
+                Login
+              </Link>
 
-        <Link
-          to="/signup"
-          className="bg-primary-600 text-white font-semibold py-2 px-5 rounded-lg hover:bg-primary-700"
-        >
-          Sign Up
-        </Link>
+              <Link
+                to="/signup"
+                className="bg-white/10 backdrop-blur-md border border-white/20 text-white font-semibold py-2 px-5 rounded-lg shadow-sm hover:bg-white/20 hover:border-white/30 hover:shadow-md transition-all duration-300 hover:scale-105 active:scale-95"
+              >
+                Sign Up
+              </Link>
 
-      </div>
-    </div>
-  </div>
-</nav>
+            </div>
+          </div>
+        </div>
+      </nav>
 
       {/* ================= HERO VIDEO SECTION ================= */}
-      <section className="relative h-[calc(100vh-64px)] min-h-[600px] overflow-hidden">
+      <section className="relative h-screen min-h-[600px] overflow-hidden">
 
         {/* Background Video */}
         <video

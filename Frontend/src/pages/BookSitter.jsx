@@ -77,7 +77,7 @@ export default function BookSitter() {
           </div>
           <div>
             <h1 className="text-xl font-bold">{sitter.name}</h1>
-            <p className="text-sm text-gray-500">{sitter.location || "Location not set"} • ${sitter.hourlyRate}/hr</p>
+            <p className="text-sm text-gray-500">{sitter.location || "Location not set"} • {sitter.hourlyRate}/hr</p>
           </div>
         </div>
         {sitter.bio && <p className="text-sm text-gray-600 mt-3">{sitter.bio}</p>}

@@ -1,14 +1,20 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../api/client";
 import StatusBadge from "../components/StatusBadge";
 
 export default function SitterDashboard() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   useEffect(() => {
     Promise.all([api.sitters.getProfile(), api.bookings.list()])
@@ -29,14 +35,21 @@ export default function SitterDashboard() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-800">Sitter Dashboard 🐕</h1>
-        <p className="text-gray-500 mt-1">Welcome, {user.name}! Manage your profile and bookings.</p>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">Sitter Dashboard 🐕</h1>
+          <p className="text-gray-500 mt-1">Welcome, {user.name}! Manage your profile and bookings.</p>
+        </div>
+        <div>
+          <button onClick={handleLogout} className="btn-secondary text-sm py-2 px-4 whitespace-nowrap">
+            Logout
+          </button>
+        </div>
       </div>
 
       <div className="grid sm:grid-cols-3 gap-4 mb-8">
         <div className="card">
-          <div className="text-3xl font-bold text-primary-600">${profile?.hourlyRate || 0}</div>
+          <div className="text-3xl font-bold text-primary-600">₹{profile?.hourlyRate || 0}</div>
           <div className="text-sm text-gray-500 mt-1">Hourly Rate</div>
         </div>
         <div className="card">

@@ -1,10 +1,81 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { api } from "../api/client";
 
 const ALL_SERVICES = ["Dog Walking", "Pet Sitting", "Overnight Care", "Drop-in Visit", "Grooming"];
 const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
+const INDIAN_CITIES = [
+  "Mumbai, Maharashtra",
+  "Delhi, Delhi",
+  "Bengaluru, Karnataka",
+  "Hyderabad, Telangana",
+  "Ahmedabad, Gujarat",
+  "Chennai, Tamil Nadu",
+  "Kolkata, West Bengal",
+  "Pune, Maharashtra",
+  "Jaipur, Rajasthan",
+  "Lucknow, Uttar Pradesh",
+  "Kanpur, Uttar Pradesh",
+  "Nagpur, Maharashtra",
+  "Indore, Madhya Pradesh",
+  "Thane, Maharashtra",
+  "Bhopal, Madhya Pradesh",
+  "Visakhapatnam, Andhra Pradesh",
+  "Pimpri-Chinchwad, Maharashtra",
+  "Patna, Bihar",
+  "Vadodara, Gujarat",
+  "Ghaziabad, Uttar Pradesh",
+  "Ludhiana, Punjab",
+  "Coimbatore, Tamil Nadu",
+  "Agra, Uttar Pradesh",
+  "Madurai, Tamil Nadu",
+  "Nashik, Maharashtra",
+  "Faridabad, Haryana",
+  "Meerut, Uttar Pradesh",
+  "Rajkot, Gujarat",
+  "Kalyan-Dombivli, Maharashtra",
+  "Vasai-Virar, Maharashtra",
+  "Varanasi, Uttar Pradesh",
+  "Srinagar, Jammu and Kashmir",
+  "Aurangabad, Maharashtra",
+  "Dhanbad, Jharkhand",
+  "Amritsar, Punjab",
+  "Navi Mumbai, Maharashtra",
+  "Allahabad, Uttar Pradesh",
+  "Howrah, West Bengal",
+  "Ranchi, Jharkhand",
+  "Gwalior, Madhya Pradesh",
+  "Jabalpur, Madhya Pradesh",
+  "Vijayawada, Andhra Pradesh",
+  "Jodhpur, Rajasthan",
+  "Raipur, Chhattisgarh",
+  "Kota, Rajasthan",
+  "Guwahati, Assam",
+  "Chandigarh, Chandigarh",
+  "Solapur, Maharashtra",
+  "Hubli-Dharwad, Karnataka",
+  "Bareilly, Uttar Pradesh",
+  "Moradabad, Uttar Pradesh",
+  "Mysore, Karnataka",
+  "Gurgaon, Haryana",
+  "Aligarh, Uttar Pradesh",
+  "Jalandhar, Punjab",
+  "Tiruchirappalli, Tamil Nadu",
+  "Bhubaneswar, Odisha",
+  "Salem, Tamil Nadu",
+  "Warangal, Telangana",
+  "Guntur, Andhra Pradesh",
+  "Kochi, Kerala",
+  "Noida, Uttar Pradesh",
+  "Dehradun, Uttarakhand",
+  "Shimla, Himachal Pradesh",
+  "Panaji, Goa",
+  "Thiruvananthapuram, Kerala"
+];
+
 export default function SitterProfile() {
+  const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [form, setForm] = useState({
     bio: "",
@@ -17,6 +88,13 @@ export default function SitterProfile() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  const filteredCities = form.location.trim() === ""
+    ? INDIAN_CITIES.slice(0, 8)
+    : INDIAN_CITIES.filter((city) =>
+        city.toLowerCase().includes(form.location.toLowerCase())
+      ).slice(0, 8);
 
   useEffect(() => {
     api.sitters
@@ -74,6 +152,9 @@ export default function SitterProfile() {
     try {
       await api.sitters.updateProfile(form);
       setMessage("Profile saved successfully!");
+      setTimeout(() => {
+        navigate("/");
+      }, 500); // 500ms delay so the user can read the success message briefly
     } catch (err) {
       setError(err.message);
     } finally {
@@ -109,17 +190,43 @@ export default function SitterProfile() {
             />
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
-            <div>
+            <div className="relative">
               <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
               <input
                 className="input-field"
                 value={form.location}
-                onChange={(e) => setForm({ ...form, location: e.target.value })}
+                onChange={(e) => {
+                  setForm({ ...form, location: e.target.value });
+                  setShowSuggestions(true);
+                }}
+                onFocus={() => setShowSuggestions(true)}
+                onBlur={() => setShowSuggestions(false)}
                 placeholder="City, State"
+                autoComplete="off"
               />
+              {showSuggestions && (
+                <div className="absolute z-50 left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-lg">
+                  {filteredCities.map((city) => (
+                    <div
+                      key={city}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        setForm({ ...form, location: city });
+                        setShowSuggestions(false);
+                      }}
+                      className="px-4 py-2 hover:bg-primary-50 cursor-pointer text-sm text-gray-700 text-left transition-colors"
+                    >
+                      {city}
+                    </div>
+                  ))}
+                  {filteredCities.length === 0 && (
+                    <div className="px-4 py-2 text-sm text-gray-500 italic">No cities found</div>
+                  )}
+                </div>
+              )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Hourly Rate ($)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Hourly Rate (₹)</label>
               <input
                 type="number"
                 min="1"

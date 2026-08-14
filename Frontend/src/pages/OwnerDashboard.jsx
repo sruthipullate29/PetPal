@@ -1,14 +1,20 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../api/client";
 import StatusBadge from "../components/StatusBadge";
 
 export default function OwnerDashboard() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [pets, setPets] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   useEffect(() => {
     Promise.all([api.pets.list(), api.bookings.list()])
@@ -29,9 +35,16 @@ export default function OwnerDashboard() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-800">Welcome back, {user.name}! 👋</h1>
-        <p className="text-gray-500 mt-1">Manage your pets and bookings from here.</p>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">Welcome back, {user.name}! 👋</h1>
+          <p className="text-gray-500 mt-1">Manage your pets and bookings from here.</p>
+        </div>
+        <div>
+          <button onClick={handleLogout} className="btn-secondary text-sm py-2 px-4 whitespace-nowrap">
+            Logout
+          </button>
+        </div>
       </div>
 
       <div className="grid sm:grid-cols-3 gap-4 mb-8">
