@@ -5,6 +5,57 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-white">
 
+      {/* ================= NAVIGATION BAR ================= */}
+<nav className="relative z-[100] bg-white shadow-md">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="flex items-center justify-between h-16">
+
+      {/* Logo */}
+      <Link
+        to="/"
+        className="text-2xl font-bold text-primary-600"
+      >
+        PetNiva 🐾
+      </Link>
+
+      {/* Navigation Links */}
+      <div className="flex items-center gap-6">
+
+        <Link
+          to="/"
+          className="text-gray-700 font-medium hover:text-primary-600"
+        >
+          Home
+        </Link>
+
+        <Link
+          to="/founder"
+          className="text-gray-700 font-medium hover:text-primary-600"
+        >
+          About Founder
+        </Link>
+
+        <Link
+          to="/login"
+          className="text-gray-700 font-medium hover:text-primary-600"
+        >
+          Login
+        </Link>
+
+        <Link
+          to="/signup"
+          className="bg-primary-600 text-white font-semibold py-2 px-5 rounded-lg hover:bg-primary-700"
+        >
+          Sign Up
+        </Link>
+
+      </div>
+    </div>
+  </div>
+</nav>
+      </nav>
+
+
       {/* ================= HERO VIDEO SECTION ================= */}
       <section className="relative h-[calc(100vh-64px)] min-h-[600px] overflow-hidden">
 
@@ -20,6 +71,7 @@ export default function Landing() {
 
         {/* Dark Overlay */}
         <div className="absolute inset-0 bg-black/45"></div>
+
 
         {/* Hero Content */}
         <div className="relative z-10 h-full flex items-center justify-center px-4">
@@ -40,7 +92,8 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ================= HOW PETNIVA WORKS ================= */}
+
+      {/* ================= HOW PETPAL WORKS ================= */}
       <section className="max-w-6xl mx-auto py-16 px-4">
 
         <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">
@@ -51,7 +104,10 @@ export default function Landing() {
 
           {/* Pet Owners */}
           <div className="card text-center hover:shadow-lg transition-shadow">
-            <div className="text-5xl mb-4">🏠</div>
+
+            <div className="text-5xl mb-4">
+              🏠
+            </div>
 
             <h3 className="font-semibold text-xl mb-2">
               For Pet Owners
@@ -61,11 +117,16 @@ export default function Landing() {
               Register your pets, browse verified sitters, and book
               services that fit your schedule.
             </p>
+
           </div>
+
 
           {/* Pet Sitters */}
           <div className="card text-center hover:shadow-lg transition-shadow">
-            <div className="text-5xl mb-4">🤝</div>
+
+            <div className="text-5xl mb-4">
+              🤝
+            </div>
 
             <h3 className="font-semibold text-xl mb-2">
               For Pet Sitters
@@ -75,11 +136,16 @@ export default function Landing() {
               Create your profile, set your availability, and manage
               booking requests from pet owners.
             </p>
+
           </div>
+
 
           {/* Easy Booking */}
           <div className="card text-center hover:shadow-lg transition-shadow">
-            <div className="text-5xl mb-4">📅</div>
+
+            <div className="text-5xl mb-4">
+              📅
+            </div>
 
             <h3 className="font-semibold text-xl mb-2">
               Easy Booking
@@ -89,10 +155,12 @@ export default function Landing() {
               Request, accept, and track bookings all in one place
               with real-time status updates.
             </p>
+
           </div>
 
         </div>
       </section>
+
 
       {/* ================= FOOTER ================= */}
       <footer className="bg-gray-900 text-white py-8">
