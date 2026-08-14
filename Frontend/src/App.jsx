@@ -1,7 +1,8 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
-import Navbar from "./components/Navbar";
+
 import ProtectedRoute from "./components/ProtectedRoute";
+
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -16,7 +17,11 @@ import Founder from "./pages/Founder";
 
 function DashboardRouter() {
   const { user } = useAuth();
-  if (user.role === "sitter") return <SitterDashboard />;
+
+  if (user.role === "sitter") {
+    return <SitterDashboard />;
+  }
+
   return <OwnerDashboard />;
 }
 
@@ -26,19 +31,35 @@ function App() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-primary-600 text-lg font-medium">Loading PetPal...</div>
+        <div className="text-primary-600 text-lg font-medium">
+          Loading PetPal...
+        </div>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
       <Routes>
-        <Route path="/" element={user ? <DashboardRouter /> : <Landing />} />
-        <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login />} />
-        <Route path="/signup" element={user ? <Navigate to="/" replace /> : <Signup />} />
 
+        {/* Home */}
+        <Route
+          path="/"
+          element={user ? <DashboardRouter /> : <Landing />}
+        />
+
+        {/* Authentication */}
+        <Route
+          path="/login"
+          element={user ? <Navigate to="/" replace /> : <Login />}
+        />
+
+        <Route
+          path="/signup"
+          element={user ? <Navigate to="/" replace /> : <Signup />}
+        />
+
+        {/* Owner Routes */}
         <Route
           path="/pets"
           element={
@@ -47,6 +68,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/sitters"
           element={
@@ -55,6 +77,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/sitters/:id/book"
           element={
@@ -63,6 +86,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Sitter Routes */}
         <Route
           path="/profile"
           element={
@@ -71,6 +96,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Booking Routes */}
         <Route
           path="/bookings"
           element={
@@ -79,9 +106,19 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/founder" element={<Founder />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-        
+
+        {/* Founder */}
+        <Route
+          path="/founder"
+          element={<Founder />}
+        />
+
+        {/* Unknown URL */}
+        <Route
+          path="*"
+          element={<Navigate to="/" replace />}
+        />
+
       </Routes>
     </div>
   );
