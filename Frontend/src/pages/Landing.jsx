@@ -77,10 +77,6 @@ export default function Landing() {
 
           <div className="text-center text-white max-w-4xl">
 
-            <div className="text-6xl mb-6">
-              🐶 🐱
-            </div>
-
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               A Safe Place for
               <span className="text-primary-200"> Pets</span> 🐾
@@ -91,24 +87,6 @@ export default function Landing() {
               Book care for your furry friends with confidence.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-
-              <Link
-                to="/signup"
-                className="bg-white text-primary-600 font-semibold py-3 px-8 rounded-lg hover:bg-gray-100 transition-colors"
-              >
-                Get Started
-              </Link>
-
-              <Link
-                to="/login"
-                className="border-2 border-white text-white font-semibold py-3 px-8 rounded-lg hover:bg-white/10 transition-colors"
-              >
-                Sign In
-              </Link>
-
-            </div>
-
           </div>
         </div>
       </section>
@@ -118,7 +96,7 @@ export default function Landing() {
       <section className="max-w-6xl mx-auto py-16 px-4">
 
         <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">
-          How PetPal Works
+          How PetNiva Works
         </h2>
 
         <div className="grid md:grid-cols-3 gap-8">
@@ -189,7 +167,7 @@ export default function Landing() {
         <div className="max-w-6xl mx-auto px-4 text-center">
 
           <div className="text-2xl font-bold mb-2">
-            PetPal 🐾
+            PetNiva 🐾
           </div>
 
           <p className="text-gray-400 text-sm">
@@ -197,7 +175,7 @@ export default function Landing() {
           </p>
 
           <p className="text-gray-500 text-xs mt-4">
-            © 2026 PetPal. All rights reserved.
+            © 2026 PetNiva. All rights reserved.
           </p>
 
         </div>
