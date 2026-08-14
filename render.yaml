@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: petpal
+    runtime: node
+    plan: free
+    rootDir: .
+    buildCommand: |
+      cd Frontend && npm install && npm run build && cd ../backend && npm install
+    startCommand: cd backend && node server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
