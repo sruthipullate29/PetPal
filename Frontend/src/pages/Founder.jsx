@@ -6,28 +6,28 @@ export default function Founder() {
     <div className="min-h-screen bg-gray-50">
 
       {/* Hero */}
-      <section className="bg-gradient-to-r from-primary-600 to-primary-700 text-white py-16">
-        <div className="max-w-5xl mx-auto px-4 text-center">
+<section className="bg-gradient-to-r from-primary-600 to-primary-700 text-white py-8">
+  <div className="max-w-5xl mx-auto px-4 text-center">
 
-          {/* Founder Image */}
-          <div className="w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-white shadow-lg mb-6">
-            <img
-              src={founderImage}
-              alt="Varun Raj - Founder of PetNiva"
-              className="w-full h-full object-cover"
-            />
-          </div>
+    {/* Founder Image */}
+    <div className="w-28 h-28 mx-auto rounded-full overflow-hidden border-4 border-white shadow-lg mb-3">
+      <img
+        src={founderImage}
+        alt="Varun Raj - Founder of PetNiva"
+        className="w-full h-full object-cover"
+      />
+    </div>
 
-          <h1 className="text-4xl font-bold mb-2">
-            Varun Raj
-          </h1>
+    <h1 className="text-3xl md:text-4xl font-bold mb-1">
+      Varun Raj
+    </h1>
 
-          <p className="text-primary-100 text-lg">
-            Founder of PetNiva • 2026
-          </p>
+    <p className="text-primary-100 text-base">
+      Founder of PetNiva • 2026
+    </p>
 
-        </div>
-      </section>
+  </div>
+</section>
 
       {/* Story */}
       <section className="max-w-5xl mx-auto px-4 py-16">
