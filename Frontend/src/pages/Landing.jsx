@@ -53,8 +53,6 @@ export default function Landing() {
     </div>
   </div>
 </nav>
-      </nav>
-
 
       {/* ================= HERO VIDEO SECTION ================= */}
       <section className="relative h-[calc(100vh-64px)] min-h-[600px] overflow-hidden">
