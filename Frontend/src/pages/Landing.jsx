@@ -15,7 +15,7 @@ export default function Landing() {
               to="/"
               className="text-2xl font-bold text-primary-600"
             >
-              PetPal 🐾
+              PetNiva 🐾
             </Link>
 
             {/* Navigation Links */}

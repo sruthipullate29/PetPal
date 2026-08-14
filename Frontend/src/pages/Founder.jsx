@@ -6,9 +6,13 @@ export default function Founder() {
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-primary-600 to-primary-700 text-white py-16">
         <div className="max-w-5xl mx-auto px-4 text-center">
-          <div className="w-32 h-32 mx-auto rounded-full bg-white/20 flex items-center justify-center text-6xl mb-6">
-            👨‍💼
-          </div>
+         <div className="w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-white shadow-lg mb-6">
+         <img
+           src={founderImage}
+           alt="Varun Raj - Founder of PetNiva"
+            className="w-full h-full object-cover"
+         />
+</div>
 
           <h1 className="text-4xl font-bold mb-2">Varun Raj</h1>
           <p className="text-primary-100 text-lg">
