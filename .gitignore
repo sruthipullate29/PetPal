@@ -2,5 +2,4 @@ node_modules/
 dist/
 .env
 *.log
-backend/data/
-backend/.env
+backend/data/db.json

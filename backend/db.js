@@ -1,13 +1,46 @@
-const mongoose = require("mongoose");
-require("dotenv").config();
+const fs = require("fs");
+const path = require("path");
 
-const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/petpal";
+const DB_PATH = path.join(__dirname, "data", "db.json");
 
-async function connectDb() {
-  await mongoose.connect(MONGODB_URI);
-  console.log("MongoDB connected");
+const DEFAULT_DB = {
+  users: [],
+  pets: [],
+  sitterProfiles: [],
+  bookings: [],
+};
+
+let writeQueue = Promise.resolve();
+
+function ensureDb() {
+  const dir = path.dirname(DB_PATH);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  if (!fs.existsSync(DB_PATH)) {
+    fs.writeFileSync(DB_PATH, JSON.stringify(DEFAULT_DB, null, 2));
+  }
 }
 
-module.exports = { connectDb, MONGODB_URI };
+function readDb() {
+  ensureDb();
+  const raw = fs.readFileSync(DB_PATH, "utf-8");
+  return JSON.parse(raw);
+}
 
+function writeDb(data) {
+  ensureDb();
+  writeQueue = writeQueue.then(() => {
+    fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
+  });
+  return writeQueue;
+}
+
+async function updateDb(updater) {
+  const db = readDb();
+  const result = updater(db);
+  await writeDb(db);
+  return result;
+}
+
+module.exports = { readDb, writeDb, updateDb, DEFAULT_DB };

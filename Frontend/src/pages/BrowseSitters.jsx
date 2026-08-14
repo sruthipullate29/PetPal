@@ -71,7 +71,7 @@ export default function BrowseSitters() {
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="font-bold text-primary-600">₹{sitter.hourlyRate}/hr</span>
+                <span className="font-bold text-primary-600">${sitter.hourlyRate}/hr</span>
                 <Link to={`/sitters/${sitter.id}/book`} className="btn-primary text-sm">
                   Book Now
                 </Link>

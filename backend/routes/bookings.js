@@ -1,19 +1,18 @@
 const express = require("express");
-const Booking = require("../models/Booking");
-const User = require("../models/User");
-const Pet = require("../models/Pet");
+const { v4: uuidv4 } = require("uuid");
+const { readDb, updateDb } = require("../db");
 const { authMiddleware, requireRole } = require("../middleware/auth");
 
 const router = express.Router();
 
 router.use(authMiddleware);
 
-async function enrichBooking(booking) {
-  const owner = await User.findOne({ id: booking.ownerId });
-  const sitter = await User.findOne({ id: booking.sitterId });
-  const pet = await Pet.findOne({ id: booking.petId });
+function enrichBooking(db, booking) {
+  const owner = db.users.find((u) => u.id === booking.ownerId);
+  const sitter = db.users.find((u) => u.id === booking.sitterId);
+  const pet = db.pets.find((p) => p.id === booking.petId);
   return {
-    ...booking.toJSON(),
+    ...booking,
     ownerName: owner?.name || "Unknown",
     sitterName: sitter?.name || "Unknown",
     petName: pet?.name || "Unknown",
@@ -21,16 +20,17 @@ async function enrichBooking(booking) {
   };
 }
 
-router.get("/", async (req, res) => {
+router.get("/", (req, res) => {
+  const db = readDb();
   let bookings;
+
   if (req.user.role === "owner") {
-    bookings = await Booking.find({ ownerId: req.user.id });
+    bookings = db.bookings.filter((b) => b.ownerId === req.user.id);
   } else {
-    bookings = await Booking.find({ sitterId: req.user.id });
+    bookings = db.bookings.filter((b) => b.sitterId === req.user.id);
   }
 
-  const enriched = await Promise.all(bookings.map(enrichBooking));
-  res.json(enriched);
+  res.json(bookings.map((b) => enrichBooking(db, b)));
 });
 
 router.post("/", requireRole("owner"), async (req, res) => {
@@ -40,13 +40,15 @@ router.post("/", requireRole("owner"), async (req, res) => {
     return res.status(400).json({ error: "Missing required booking fields" });
   }
 
-  const sitter = await User.findOne({ id: sitterId, role: "sitter" });
-  const pet = await Pet.findOne({ id: petId, ownerId: req.user.id });
+  const db = readDb();
+  const sitter = db.users.find((u) => u.id === sitterId && u.role === "sitter");
+  const pet = db.pets.find((p) => p.id === petId && p.ownerId === req.user.id);
 
   if (!sitter) return res.status(404).json({ error: "Sitter not found" });
   if (!pet) return res.status(404).json({ error: "Pet not found" });
 
-  const booking = await Booking.create({
+  const booking = {
+    id: uuidv4(),
     ownerId: req.user.id,
     sitterId,
     petId,
@@ -55,9 +57,14 @@ router.post("/", requireRole("owner"), async (req, res) => {
     serviceType,
     notes: notes || "",
     status: "pending",
+    createdAt: new Date().toISOString(),
+  };
+
+  await updateDb((db) => {
+    db.bookings.push(booking);
   });
 
-  res.status(201).json(await enrichBooking(booking));
+  res.status(201).json(enrichBooking(readDb(), booking));
 });
 
 router.patch("/:id/status", async (req, res) => {
@@ -68,11 +75,13 @@ router.patch("/:id/status", async (req, res) => {
     return res.status(400).json({ error: "Invalid status" });
   }
 
-  const booking = await Booking.findOne({ id: req.params.id });
-  if (!booking) {
+  const db = readDb();
+  const index = db.bookings.findIndex((b) => b.id === req.params.id);
+  if (index === -1) {
     return res.status(404).json({ error: "Booking not found" });
   }
 
+  const booking = db.bookings[index];
   const isOwner = req.user.role === "owner" && booking.ownerId === req.user.id;
   const isSitter = req.user.role === "sitter" && booking.sitterId === req.user.id;
 
@@ -88,11 +97,13 @@ router.patch("/:id/status", async (req, res) => {
     return res.status(403).json({ error: "Sitters can accept, decline, or complete bookings" });
   }
 
-  booking.status = status;
-  await booking.save();
+  await updateDb((db) => {
+    const idx = db.bookings.findIndex((b) => b.id === req.params.id);
+    if (idx !== -1) db.bookings[idx].status = status;
+  });
 
-  res.json(await enrichBooking(booking));
+  const updated = { ...booking, status };
+  res.json(enrichBooking(readDb(), updated));
 });
 
 module.exports = router;
-
