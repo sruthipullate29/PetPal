@@ -17,7 +17,7 @@ export default function Navbar() {
           🐾 PetNiva
         </Link>
 
-        {user && (
+        {user ? (
           <div className="flex items-center gap-4">
             <span className="text-sm text-gray-600 hidden sm:inline">
               Hi, {user.name}
@@ -50,6 +50,33 @@ export default function Navbar() {
             <button onClick={handleLogout} className="btn-secondary text-sm py-1.5 px-3">
               Logout
             </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-4 sm:gap-6">
+            <Link
+              to="/"
+              className="text-gray-700 font-medium hover:text-primary-600 transition-colors text-sm"
+            >
+              Home
+            </Link>
+            <Link
+              to="/founder"
+              className="text-gray-700 font-medium hover:text-primary-600 transition-colors text-sm"
+            >
+              About Founder
+            </Link>
+            <Link
+              to="/login"
+              className="text-gray-700 font-medium hover:text-primary-600 transition-colors text-sm"
+            >
+              Login
+            </Link>
+            <Link
+              to="/signup"
+              className="bg-primary-600 text-white font-semibold py-1.5 px-4 rounded-lg hover:bg-primary-700 transition-colors text-sm"
+            >
+              Sign Up
+            </Link>
           </div>
         )}
       </div>

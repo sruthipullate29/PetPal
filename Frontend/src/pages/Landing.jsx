@@ -5,56 +5,6 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-white">
 
-      {/* ================= NAVIGATION BAR ================= */}
-      <nav className="bg-white shadow-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-
-            {/* Logo */}
-            <Link
-              to="/"
-              className="text-2xl font-bold text-primary-600"
-            >
-              PetNiva 🐾
-            </Link>
-
-            {/* Navigation Links */}
-            <div className="flex items-center gap-6">
-
-              <Link
-                to="/"
-                className="text-gray-700 font-medium hover:text-primary-600 transition-colors"
-              >
-                Home
-              </Link>
-
-              <Link
-                to="/founder"
-                className="text-gray-700 font-medium hover:text-primary-600 transition-colors"
-              >
-                About Founder
-              </Link>
-
-              <Link
-                to="/login"
-                className="text-gray-700 font-medium hover:text-primary-600 transition-colors"
-              >
-                Login
-              </Link>
-
-              <Link
-                to="/signup"
-                className="bg-primary-600 text-white font-semibold py-2 px-5 rounded-lg hover:bg-primary-700 transition-colors"
-              >
-                Sign Up
-              </Link>
-
-            </div>
-          </div>
-        </div>
-      </nav>
-
-
       {/* ================= HERO VIDEO SECTION ================= */}
       <section className="relative h-[calc(100vh-64px)] min-h-[600px] overflow-hidden">
 
