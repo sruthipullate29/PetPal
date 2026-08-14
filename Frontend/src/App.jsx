@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 
+import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 import Landing from "./pages/Landing";
@@ -32,7 +33,7 @@ function App() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-primary-600 text-lg font-medium">
-          Loading PetPal...
+          Loading PetNiva...
         </div>
       </div>
     );
@@ -40,6 +41,10 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+
+      {/* Navigation Bar */}
+      <Navbar />
+
       <Routes>
 
         {/* Home */}
@@ -48,12 +53,13 @@ function App() {
           element={user ? <DashboardRouter /> : <Landing />}
         />
 
-        {/* Authentication */}
+        {/* Login */}
         <Route
           path="/login"
           element={user ? <Navigate to="/" replace /> : <Login />}
         />
 
+        {/* Signup */}
         <Route
           path="/signup"
           element={user ? <Navigate to="/" replace /> : <Signup />}
@@ -107,7 +113,7 @@ function App() {
           }
         />
 
-        {/* Founder */}
+        {/* Founder Page */}
         <Route
           path="/founder"
           element={<Founder />}
