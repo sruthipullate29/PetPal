@@ -7,7 +7,7 @@ export default function Landing() {
 
       {/* ================= NAVIGATION BAR ================= */}
       <nav className="absolute top-0 left-0 right-0 z-[100] bg-black/20 backdrop-blur-md border-b border-white/10 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto pl-4 pr-3 sm:pl-6 sm:pr-4 lg:pl-8 lg:pr-4">
           <div className="flex items-center justify-between h-16">
 
             {/* Logo */}
@@ -19,32 +19,32 @@ export default function Landing() {
             </Link>
 
             {/* Navigation Links */}
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3">
 
               <Link
                 to="/"
-                className="text-white/80 font-medium hover:text-white transition-all duration-300 hover:scale-105 active:scale-95"
+                className="bg-white/5 border border-white/10 hover:bg-white/15 hover:border-white/20 text-white/80 hover:text-white rounded-full px-5 py-2 text-sm font-semibold transition-colors duration-200"
               >
                 Home
               </Link>
 
               <Link
                 to="/founder"
-                className="text-white/80 font-medium hover:text-white transition-all duration-300 hover:scale-105 active:scale-95"
+                className="bg-white/5 border border-white/10 hover:bg-white/15 hover:border-white/20 text-white/80 hover:text-white rounded-full px-5 py-2 text-sm font-semibold transition-colors duration-200"
               >
                 About Founder
               </Link>
 
               <Link
                 to="/login"
-                className="text-white/80 font-medium hover:text-white transition-all duration-300 hover:scale-105 active:scale-95"
+                className="bg-white/5 border border-white/10 hover:bg-white/15 hover:border-white/20 text-white/80 hover:text-white rounded-full px-5 py-2 text-sm font-semibold transition-colors duration-200"
               >
                 Login
               </Link>
 
               <Link
                 to="/signup"
-                className="bg-white/10 backdrop-blur-md border border-white/20 text-white font-semibold py-2 px-5 rounded-lg shadow-sm hover:bg-white/20 hover:border-white/30 hover:shadow-md transition-all duration-300 hover:scale-105 active:scale-95"
+                className="bg-white/15 backdrop-blur-md border border-white/25 text-white text-sm font-semibold py-2 px-5 rounded-full shadow-sm hover:bg-white/25 hover:border-white/40 hover:shadow-md transition-colors duration-200"
               >
                 Sign Up
               </Link>

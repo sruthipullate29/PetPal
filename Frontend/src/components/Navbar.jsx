@@ -52,28 +52,28 @@ export default function Navbar() {
             </button>
           </div>
         ) : (
-          <div className="flex items-center gap-4 sm:gap-6">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Link
               to="/"
-              className="text-gray-700 font-medium hover:text-primary-600 transition-colors text-sm"
+              className="px-4 py-1.5 rounded-full text-gray-700 hover:text-primary-600 hover:bg-gray-100 transition-colors duration-200 text-sm font-semibold"
             >
               Home
             </Link>
             <Link
               to="/founder"
-              className="text-gray-700 font-medium hover:text-primary-600 transition-colors text-sm"
+              className="px-4 py-1.5 rounded-full text-gray-700 hover:text-primary-600 hover:bg-gray-100 transition-colors duration-200 text-sm font-semibold"
             >
               About Founder
             </Link>
             <Link
               to="/login"
-              className="text-gray-700 font-medium hover:text-primary-600 transition-colors text-sm"
+              className="px-4 py-1.5 rounded-full text-gray-700 hover:text-primary-600 hover:bg-gray-100 transition-colors duration-200 text-sm font-semibold"
             >
               Login
             </Link>
             <Link
               to="/signup"
-              className="bg-primary-600 text-white font-semibold py-1.5 px-4 rounded-lg hover:bg-primary-700 transition-colors text-sm"
+              className="px-4 py-1.5 rounded-full text-gray-700 hover:text-primary-600 hover:bg-gray-100 transition-colors duration-200 text-sm font-semibold"
             >
               Sign Up
             </Link>
