@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const { connectDatabase } = require("./db");
 const authRoutes = require("./routes/auth");
 const petsRoutes = require("./routes/pets");
 const sittersRoutes = require("./routes/sitters");
@@ -29,6 +30,7 @@ app.use((err, _req, res, _next) => {
   res.status(err.status || 500).json({ error: err.message || "Internal server error" });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+  await connectDatabase();
   console.log(`PetPal API running on http://localhost:${PORT}`);
 });

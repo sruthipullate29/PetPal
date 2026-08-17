@@ -1,6 +1,9 @@
+const mongoose = require("mongoose");
 const fs = require("fs");
 const path = require("path");
+require("dotenv").config();
 
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/petpal";
 const DB_PATH = path.join(__dirname, "data", "db.json");
 
 const DEFAULT_DB = {
@@ -10,7 +13,22 @@ const DEFAULT_DB = {
   bookings: [],
 };
 
+let isMongoConnected = false;
 let writeQueue = Promise.resolve();
+
+async function connectDatabase() {
+  try {
+    mongoose.set("strictQuery", false);
+    await mongoose.connect(MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000,
+    });
+    isMongoConnected = true;
+    console.log(`✅ MongoDB connected successfully to ${MONGODB_URI}`);
+  } catch (err) {
+    isMongoConnected = false;
+    console.warn(`⚠️ MongoDB connection unavailable (${err.message}). Using JSON file database fallback (${DB_PATH}).`);
+  }
+}
 
 function ensureDb() {
   const dir = path.dirname(DB_PATH);
@@ -43,4 +61,15 @@ async function updateDb(updater) {
   return result;
 }
 
-module.exports = { readDb, writeDb, updateDb, DEFAULT_DB };
+function isMongo() {
+  return isMongoConnected;
+}
+
+module.exports = {
+  connectDatabase,
+  isMongo,
+  readDb,
+  writeDb,
+  updateDb,
+  DEFAULT_DB,
+};

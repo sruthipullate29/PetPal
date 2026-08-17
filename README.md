@@ -1,44 +1,47 @@
-# PetPal 🐾
+# PetPal 🐾 — Professional Pet Care Network
 
-A full-stack pet sitting application that connects pet owners with trusted pet sitters. Book care for your pets or offer your sitting services — all in one place.
+A full-stack enterprise-grade pet sitting application connecting pet owners with trusted pet caregivers. Book sitting, walking, and overnight care for your pets, or manage your pet care business — all in one platform.
 
-## Features
+## Key Features
 
 ### Pet Owners
-- Sign up and log in
-- Register and manage pets (name, type, breed, age, notes)
-- Browse and search available pet sitters
-- Book pet sitting services with date range and service type
-- View and cancel bookings
+- Account registration & JWT authentication
+- Manage pet profiles (name, type, breed, age, special care notes)
+- Search & filter verified sitters by city, services, and hourly rates
+- Real-time booking financial calculator (days × hourly rate total estimation)
+- Booking status tracking (`Pending` → `Accepted` / `Declined` → `Completed`)
 
 ### Pet Sitters
-- Sign up and create a sitter profile
-- Set bio, location, hourly rate, and services offered
-- Configure weekly availability slots
-- Accept, decline, or complete booking requests
+- Professional sitter profile management (bio, city autocomplete, hourly rate, services toggles)
+- Configure weekly availability slots with time validation
+- Manage client booking requests directly from the dashboard
+- Quick status action controls (Accept, Decline, Mark Completed)
 
-### Both Roles
-- Role-based dashboards with stats and quick actions
-- Booking management with status tracking (pending → accepted/declined → completed)
-- Modern, responsive UI built with React and Tailwind CSS
+### Enterprise Application Architecture
+- **Persistent Global Layout:** Role-aware top navigation bar with active route indicators and mobile drawer menu.
+- **Modern Iconography:** Clean SVG UI icon system using `lucide-react`.
+- **System Feedback:** Custom modal dialogs (replacing native `confirm()` popups) and floating toast notifications.
+- **Skeleton Loaders:** Smooth loading state transitions for dashboards, grids, and lists.
+- **Database Persistence:** MongoDB Mongoose database connection with `.env` configuration and fallback adapter.
 
 ## Tech Stack
 
-| Layer    | Technology                          |
-|----------|-------------------------------------|
-| Frontend | React 18, Vite, React Router, Tailwind CSS |
-| Backend  | Node.js, Express                    |
-| Auth     | JWT (JSON Web Tokens)               |
-| Storage  | JSON file (`backend/data/db.json`)  |
+| Layer | Technology |
+| :--- | :--- |
+| **Frontend** | React 18, Vite, React Router v6, Tailwind CSS 3.4, Lucide Icons |
+| **Backend** | Node.js, Express 4.x |
+| **Database** | MongoDB / Mongoose (with JSON fallback store) |
+| **Auth** | JWT (JSON Web Tokens) + Bcrypt password hashing |
 
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/) v18 or later
 - npm (comes with Node.js)
+- MongoDB instance (MongoDB Atlas or local MongoDB daemon)
 
 ## Getting Started
 
-### 1. Install dependencies
+### 1. Install Dependencies
 
 ```bash
 # Backend
@@ -50,89 +53,51 @@ cd Frontend
 npm install
 ```
 
-### 2. Start the backend
+### 2. Configure Environment Variables
+
+Create a `.env` file in the `backend/` directory based on `.env.example`:
+
+```env
+MONGODB_URI=mongodb://127.0.0.1:27017/petpal
+JWT_SECRET=change-me-to-a-long-random-string
+PORT=3001
+```
+
+### 3. Start the Backend API
 
 ```bash
 cd backend
 npm start
 ```
 
-The API runs at **http://localhost:3001**. A health check is available at `GET /api/health`.
+The backend server runs at **http://localhost:3001**. Health check is available at `GET /api/health`.
 
-### 3. Start the frontend
+### 4. Start the Frontend Application
 
 ```bash
 cd Frontend
 npm run dev
 ```
 
-The app opens at **http://localhost:5173**. API requests are proxied to the backend automatically.
-
-## Usage Flow
-
-1. **Sign up** as a Pet Owner or Pet Sitter at `/signup`
-2. **Owners**: Add pets → Browse sitters → Book a service
-3. **Sitters**: Complete your profile → Set availability → Accept booking requests
-4. Both roles can track bookings at `/bookings`
+The frontend application opens at **http://localhost:5173**.
 
 ## API Endpoints
 
-| Method | Endpoint                    | Description              | Auth   |
-|--------|-----------------------------|--------------------------|--------|
-| POST   | `/api/auth/signup`          | Register new user        | No     |
-| POST   | `/api/auth/login`           | Log in                   | No     |
-| GET    | `/api/auth/me`              | Get current user         | Yes    |
-| GET    | `/api/pets`                 | List owner's pets        | Owner  |
-| POST   | `/api/pets`                 | Add a pet                | Owner  |
-| PUT    | `/api/pets/:id`             | Update a pet             | Owner  |
-| DELETE | `/api/pets/:id`             | Delete a pet             | Owner  |
-| GET    | `/api/sitters`              | List all sitters         | Yes    |
-| GET    | `/api/sitters/me`           | Get sitter profile       | Sitter |
-| PUT    | `/api/sitters/me`           | Update sitter profile    | Sitter |
-| GET    | `/api/bookings`             | List user's bookings     | Yes    |
-| POST   | `/api/bookings`             | Create booking           | Owner  |
-| PATCH  | `/api/bookings/:id/status`  | Update booking status    | Yes    |
-
-## Project Structure
-
-```
-PetPal/
-├── README.md
-├── backend/
-│   ├── server.js           # Express entry point
-│   ├── db.js               # JSON file storage helpers
-│   ├── middleware/
-│   │   └── auth.js         # JWT middleware
-│   ├── routes/
-│   │   ├── auth.js
-│   │   ├── pets.js
-│   │   ├── sitters.js
-│   │   └── bookings.js
-│   └── data/
-│       └── db.json         # Auto-created on first run
-└── Frontend/
-    ├── index.html
-    ├── vite.config.js
-    ├── tailwind.config.js
-    └── src/
-        ├── App.jsx
-        ├── main.jsx
-        ├── api/client.js
-        ├── context/AuthContext.jsx
-        ├── components/
-        └── pages/
-```
-
-## Limitations & Next Steps
-
-- **File-based storage** — suitable for development/demo; use PostgreSQL or MongoDB for production
-- **No email verification or password reset**
-- **No payment processing**
-- **No real-time notifications** — users must refresh to see booking updates
-- **No image uploads** for pets or sitter profiles
-- **No reviews/ratings** system
-
-Potential enhancements: messaging between owners and sitters, calendar integration, push notifications, admin panel, and mobile app.
+| Method | Endpoint | Description | Auth Required |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/auth/signup` | Register new user (Owner or Sitter) | Public |
+| `POST` | `/api/auth/login` | Authenticate user & return JWT token | Public |
+| `GET` | `/api/auth/me` | Fetch authenticated user context | Authenticated |
+| `GET` | `/api/pets` | List owner's registered pets | Owner |
+| `POST` | `/api/pets` | Add new pet profile | Owner |
+| `PUT` | `/api/pets/:id` | Update pet details | Owner |
+| `DELETE` | `/api/pets/:id` | Remove pet profile | Owner |
+| `GET` | `/api/sitters` | List available sitters | Authenticated |
+| `GET` | `/api/sitters/me` | Fetch current sitter's profile | Sitter |
+| `PUT` | `/api/sitters/me` | Update sitter bio, rate, & availability | Sitter |
+| `GET` | `/api/bookings` | List user's bookings (Owner or Sitter) | Authenticated |
+| `POST` | `/api/bookings` | Request new booking with calculation | Owner |
+| `PATCH` | `/api/bookings/:id/status` | Update booking status | Authenticated |
 
 ## License
 
