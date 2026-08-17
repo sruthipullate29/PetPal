@@ -1,24 +1,52 @@
 const mongoose = require("mongoose");
-const { v4: uuidv4 } = require("uuid");
 
-const petSchema = new mongoose.Schema({
-  id: { type: String, default: uuidv4, unique: true },
-  ownerId: { type: String, required: true },
-  name: { type: String, required: true },
-  type: { type: String, required: true },
-  breed: { type: String, default: "" },
-  age: { type: String, default: "" },
-  notes: { type: String, default: "" },
-  createdAt: { type: Date, default: Date.now },
-});
-
-petSchema.set("toJSON", {
-  transform: (_doc, ret) => {
-    delete ret._id;
-    delete ret.__v;
-    return ret;
+const petSchema = new mongoose.Schema(
+  {
+    ownerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
+    name: {
+      type: String,
+      required: [true, "Pet name is required"],
+      trim: true,
+    },
+    type: {
+      type: String,
+      required: [true, "Pet type is required"],
+      enum: ["Dog", "Cat", "Bird", "Rabbit", "Other"],
+      default: "Dog",
+    },
+    breed: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    age: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    notes: {
+      type: String,
+      default: "",
+      trim: true,
+    },
   },
-});
+  {
+    timestamps: true,
+    toJSON: {
+      transform: (_doc, ret) => {
+        ret.id = ret._id.toString();
+        ret.ownerId = ret.ownerId ? ret.ownerId.toString() : ret.ownerId;
+        delete ret._id;
+        delete ret.__v;
+        return ret;
+      },
+    },
+  }
+);
 
 module.exports = mongoose.model("Pet", petSchema);
-
